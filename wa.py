@@ -1,15 +1,15 @@
-# wa.py
 import os
 import httpx
 from dotenv import load_dotenv
 
-load_dotenv()  # <-- make sure .env is loaded
+# load .env before reading values
+load_dotenv("/root/whatsapp-bot-api/.env")
 
-WABA_TOKEN = os.getenv("WABA_TOKEN", "").strip()       # strip is IMPORTANT
-WABA_PHONE_ID = os.getenv("WABA_PHONE_ID", "").strip()
+WABA_TOKEN = os.getenv("WABA_TOKEN", "")
+WABA_PHONE_ID = os.getenv("WABA_PHONE_ID", "")
 
 GRAPH_BASE = "https://graph.facebook.com"
-GRAPH_VERSION = "v20.0"
+GRAPH_VERSION = "v20.0"  # current, works with 23.0 webhooks too
 
 async def wa_send_text(to_number: str, text: str):
     if not (WABA_TOKEN and WABA_PHONE_ID):
@@ -17,7 +17,7 @@ async def wa_send_text(to_number: str, text: str):
 
     url = f"{GRAPH_BASE}/{GRAPH_VERSION}/{WABA_PHONE_ID}/messages"
     headers = {
-        "Authorization": f"Bearer {WABA_TOKEN}",   # now safe
+        "Authorization": f"Bearer {WABA_TOKEN}",
         "Content-Type": "application/json",
     }
     payload = {
