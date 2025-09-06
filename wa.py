@@ -1,5 +1,9 @@
 import os
 import httpx
+from dotenv import load_dotenv
+
+# Load .env so WABA_TOKEN and WABA_PHONE_ID exist before we use them
+load_dotenv()
 
 WABA_TOKEN = os.getenv("WABA_TOKEN", "")
 WABA_PHONE_ID = os.getenv("WABA_PHONE_ID", "")
@@ -29,6 +33,5 @@ async def wa_send_text(to_number: str, text: str):
 
     async with httpx.AsyncClient(timeout=20) as client:
         r = await client.post(url, headers=headers, json=payload)
-        # Raise for non-2xx so we see errors in logs
         r.raise_for_status()
         return r.json()
