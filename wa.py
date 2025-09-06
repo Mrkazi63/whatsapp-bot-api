@@ -1,27 +1,23 @@
+# wa.py
 import os
 import httpx
 from dotenv import load_dotenv
 
-# Load .env so WABA_TOKEN and WABA_PHONE_ID exist before we use them
-load_dotenv()
+load_dotenv()  # <-- make sure .env is loaded
 
-WABA_TOKEN = os.getenv("WABA_TOKEN", "")
-WABA_PHONE_ID = os.getenv("WABA_PHONE_ID", "")
+WABA_TOKEN = os.getenv("WABA_TOKEN", "").strip()       # strip is IMPORTANT
+WABA_PHONE_ID = os.getenv("WABA_PHONE_ID", "").strip()
 
 GRAPH_BASE = "https://graph.facebook.com"
-GRAPH_VERSION = "v20.0"  # current, works with 23.0 webhooks too
+GRAPH_VERSION = "v20.0"
 
 async def wa_send_text(to_number: str, text: str):
-    """
-    Send a simple text message via WhatsApp Cloud API.
-    `to_number` should be the WhatsApp number like '15551234567' (no '+').
-    """
     if not (WABA_TOKEN and WABA_PHONE_ID):
         raise RuntimeError("WABA_TOKEN/WABA_PHONE_ID missing in environment")
 
     url = f"{GRAPH_BASE}/{GRAPH_VERSION}/{WABA_PHONE_ID}/messages"
     headers = {
-        "Authorization": f"Bearer {WABA_TOKEN}",
+        "Authorization": f"Bearer {WABA_TOKEN}",   # now safe
         "Content-Type": "application/json",
     }
     payload = {
